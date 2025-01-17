@@ -133,7 +133,7 @@ function SearchResultsPredictiveCollections({
       <h5>Collections</h5>
       <ul>
         {collections.map((collection) => {
-          const collectionUrl = urlWithTrackingParams({
+          const colllectionUrl = urlWithTrackingParams({
             baseUrl: `/collections/${collection.handle}`,
             trackingParams: collection.trackingParameters,
             term: term.current,
@@ -141,7 +141,7 @@ function SearchResultsPredictiveCollections({
 
           return (
             <li className="predictive-search-result-item" key={collection.id}>
-              <Link onClick={closeSearch} to={collectionUrl}>
+              <Link onClick={closeSearch} to={colllectionUrl}>
                 {collection.image?.url && (
                   <Image
                     alt={collection.image.altText ?? ''}
@@ -213,8 +213,7 @@ function SearchResultsPredictiveProducts({
             term: term.current,
           });
 
-          const price = product?.selectedOrFirstAvailableVariant?.price;
-          const image = product?.selectedOrFirstAvailableVariant?.image;
+          const image = product?.variants?.nodes?.[0].image;
           return (
             <li className="predictive-search-result-item" key={product.id}>
               <Link to={productUrl} onClick={closeSearch}>
@@ -228,7 +227,11 @@ function SearchResultsPredictiveProducts({
                 )}
                 <div>
                   <p>{product.title}</p>
-                  <small>{price && <Money data={price} />}</small>
+                  <small>
+                    {product?.variants?.nodes?.[0].price && (
+                      <Money data={product.variants.nodes[0].price} />
+                    )}
+                  </small>
                 </div>
               </Link>
             </li>
@@ -241,20 +244,35 @@ function SearchResultsPredictiveProducts({
 
 function SearchResultsPredictiveQueries({
   queries,
-  queriesDatalistId,
-}: PartialPredictiveSearchResult<'queries', never> & {
-  queriesDatalistId: string;
-}) {
+  inputRef,
+}: PartialPredictiveSearchResult<'queries', 'inputRef'>) {
   if (!queries.length) return null;
 
   return (
-    <datalist id={queriesDatalistId}>
-      {queries.map((suggestion) => {
-        if (!suggestion) return null;
+    <div className="predictive-search-result" key="queries">
+      <h5>Queries</h5>
+      <ul>
+        {queries.map((suggestion) => {
+          if (!suggestion) return null;
 
-        return <option key={suggestion.text} value={suggestion.text} />;
-      })}
-    </datalist>
+          return (
+            <li className="predictive-search-result-item" key={suggestion.text}>
+              <div
+                role="presentation"
+                onClick={() => {
+                  if (!inputRef.current) return;
+                  inputRef.current.value = suggestion.text;
+                  inputRef.current.focus();
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: suggestion?.styledText,
+                }}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 

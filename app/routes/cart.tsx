@@ -1,12 +1,10 @@
-import {type MetaFunction, useLoaderData} from '@remix-run/react';
+import {Await, type MetaFunction, useRouteLoaderData} from '@remix-run/react';
+import {Suspense} from 'react';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
-import {
-  json,
-  type LoaderFunctionArgs,
-  type ActionFunctionArgs,
-} from '@netlify/remix-runtime';
+import {json, type ActionFunctionArgs} from '@netlify/remix-runtime';
 import {CartMain} from '~/components/CartMain';
+import type {RootLoader} from '~/root';
 
 export const meta: MetaFunction = () => {
   return [{title: `Hydrogen | Cart`}];
@@ -50,20 +48,6 @@ export async function action({request, context}: ActionFunctionArgs) {
       result = await cart.updateDiscountCodes(discountCodes);
       break;
     }
-    case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      const formGiftCardCode = inputs.giftCardCode;
-
-      // User inputted gift card code
-      const giftCardCodes = (
-        formGiftCardCode ? [formGiftCardCode] : []
-      ) as string[];
-
-      // Combine gift card codes already applied on cart
-      giftCardCodes.push(...inputs.giftCardCodes);
-
-      result = await cart.updateGiftCardCodes(giftCardCodes);
-      break;
-    }
     case CartForm.ACTIONS.BuyerIdentityUpdate: {
       result = await cart.updateBuyerIdentity({
         ...inputs.buyerIdentity,
@@ -76,7 +60,7 @@ export async function action({request, context}: ActionFunctionArgs) {
 
   const cartId = result?.cart?.id;
   const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
-  const {cart: cartResult, errors, warnings} = result;
+  const {cart: cartResult, errors} = result;
 
   const redirectTo = formData.get('redirectTo') ?? null;
   if (typeof redirectTo === 'string') {
@@ -88,7 +72,6 @@ export async function action({request, context}: ActionFunctionArgs) {
     {
       cart: cartResult,
       errors,
-      warnings,
       analytics: {
         cartId,
       },
@@ -97,18 +80,23 @@ export async function action({request, context}: ActionFunctionArgs) {
   );
 }
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {cart} = context;
-  return json(await cart.get());
-}
-
 export default function Cart() {
-  const cart = useLoaderData<typeof loader>();
+  const rootData = useRouteLoaderData<RootLoader>('root');
+  if (!rootData) return null;
 
   return (
     <div className="cart">
       <h1>Cart</h1>
-      <CartMain layout="page" cart={cart} />
+      <Suspense fallback={<p>Loading cart ...</p>}>
+        <Await
+          resolve={rootData.cart}
+          errorElement={<div>An error occurred</div>}
+        >
+          {(cart) => {
+            return <CartMain layout="page" cart={cart} />;
+          }}
+        </Await>
+      </Suspense>
     </div>
   );
 }

@@ -1,25 +1,20 @@
-import {defer, type LoaderFunctionArgs} from '@netlify/remix-runtime';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
+import {Suspense} from 'react';
+import {defer, redirect, type LoaderFunctionArgs} from '@netlify/remix-runtime';
+import {Await, useLoaderData, type MetaFunction} from '@remix-run/react';
+import type {ProductFragment} from 'storefrontapi.generated';
 import {
   getSelectedProductOptions,
   Analytics,
   useOptimisticVariant,
-  getProductOptions,
-  getAdjacentAndFirstAvailableVariants,
-  useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
+import type {SelectedOption} from '@shopify/hydrogen/storefront-api-types';
+import {getVariantUrl} from '~/lib/variants';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
-    {
-      rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
-    },
-  ];
+  return [{title: `Hydrogen | ${data?.product.title ?? ''}`}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -59,6 +54,24 @@ async function loadCriticalData({
     throw new Response(null, {status: 404});
   }
 
+  const firstVariant = product.variants.nodes[0];
+  const firstVariantIsDefault = Boolean(
+    firstVariant.selectedOptions.find(
+      (option: SelectedOption) =>
+        option.name === 'Title' && option.value === 'Default Title',
+    ),
+  );
+
+  if (firstVariantIsDefault) {
+    product.selectedVariant = firstVariant;
+  } else {
+    // if no selected variant was returned from the selected options,
+    // we redirect to the first variant's url with it's selected options applied
+    if (!product.selectedVariant) {
+      throw redirectToFirstVariant({product, request});
+    }
+  }
+
   return {
     product,
   };
@@ -70,30 +83,55 @@ async function loadCriticalData({
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context, params}: LoaderFunctionArgs) {
-  // Put any API calls that is not critical to be available on first page render
-  // For example: product reviews, product recommendations, social feeds.
+  // In order to show which variants are available in the UI, we need to query
+  // all of them. But there might be a *lot*, so instead separate the variants
+  // into it's own separate query that is deferred. So there's a brief moment
+  // where variant options might show as available when they're not, but after
+  // this deffered query resolves, the UI will update.
+  const variants = context.storefront
+    .query(VARIANTS_QUERY, {
+      variables: {handle: params.handle!},
+    })
+    .catch((error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
+    });
 
-  return {};
+  return {
+    variants,
+  };
+}
+
+function redirectToFirstVariant({
+  product,
+  request,
+}: {
+  product: ProductFragment;
+  request: Request;
+}) {
+  const url = new URL(request.url);
+  const firstVariant = product.variants.nodes[0];
+
+  return redirect(
+    getVariantUrl({
+      pathname: url.pathname,
+      handle: product.handle,
+      selectedOptions: firstVariant.selectedOptions,
+      searchParams: new URLSearchParams(url.search),
+    }),
+    {
+      status: 302,
+    },
+  );
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
-
-  // Optimistically selects a variant with given available variant information
+  const {product, variants} = useLoaderData<typeof loader>();
   const selectedVariant = useOptimisticVariant(
-    product.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
+    product.selectedVariant,
+    variants,
   );
-
-  // Sets the search param to the selected variant without navigation
-  // only when no search params are set in the url
-  useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
-
-  // Get the product options array
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
 
   const {title, descriptionHtml} = product;
 
@@ -107,10 +145,28 @@ export default function Product() {
           compareAtPrice={selectedVariant?.compareAtPrice}
         />
         <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
+        <Suspense
+          fallback={
+            <ProductForm
+              product={product}
+              selectedVariant={selectedVariant}
+              variants={[]}
+            />
+          }
+        >
+          <Await
+            errorElement="There was a problem loading product variants"
+            resolve={variants}
+          >
+            {(data) => (
+              <ProductForm
+                product={product}
+                selectedVariant={selectedVariant}
+                variants={data?.product?.variants.nodes || []}
+              />
+            )}
+          </Await>
+        </Suspense>
         <br />
         <br />
         <p>
@@ -184,30 +240,17 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
-    encodedVariantExistence
-    encodedVariantAvailability
     options {
       name
-      optionValues {
-        name
-        firstSelectableVariant {
-          ...ProductVariant
-        }
-        swatch {
-          color
-          image {
-            previewImage {
-              url
-            }
-          }
-        }
+      values
+    }
+    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+      ...ProductVariant
+    }
+    variants(first: 1) {
+      nodes {
+        ...ProductVariant
       }
-    }
-    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
-      ...ProductVariant
-    }
-    adjacentVariants (selectedOptions: $selectedOptions) {
-      ...ProductVariant
     }
     seo {
       description
@@ -229,4 +272,28 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
+` as const;
+
+const PRODUCT_VARIANTS_FRAGMENT = `#graphql
+  fragment ProductVariants on Product {
+    variants(first: 250) {
+      nodes {
+        ...ProductVariant
+      }
+    }
+  }
+  ${PRODUCT_VARIANT_FRAGMENT}
+` as const;
+
+const VARIANTS_QUERY = `#graphql
+  ${PRODUCT_VARIANTS_FRAGMENT}
+  query ProductVariants(
+    $country: CountryCode
+    $language: LanguageCode
+    $handle: String!
+  ) @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      ...ProductVariants
+    }
+  }
 ` as const;

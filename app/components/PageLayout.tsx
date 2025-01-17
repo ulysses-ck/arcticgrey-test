@@ -1,5 +1,5 @@
 import {Await, Link} from '@remix-run/react';
-import {Suspense, useId} from 'react';
+import {Suspense} from 'react';
 import type {
   CartApiQueryFragment,
   FooterQuery,
@@ -70,7 +70,6 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
 }
 
 function SearchAside() {
-  const queriesDatalistId = useId();
   return (
     <Aside type="search" heading="SEARCH">
       <div className="predictive-search">
@@ -85,7 +84,6 @@ function SearchAside() {
                 placeholder="Search"
                 ref={inputRef}
                 type="search"
-                list={queriesDatalistId}
               />
               &nbsp;
               <button onClick={goToSearch}>Search</button>
@@ -94,7 +92,7 @@ function SearchAside() {
         </SearchFormPredictive>
 
         <SearchResultsPredictive>
-          {({items, total, term, state, closeSearch}) => {
+          {({items, total, term, state, inputRef, closeSearch}) => {
             const {articles, collections, pages, products, queries} = items;
 
             if (state === 'loading' && term.current) {
@@ -109,7 +107,7 @@ function SearchAside() {
               <>
                 <SearchResultsPredictive.Queries
                   queries={queries}
-                  queriesDatalistId={queriesDatalistId}
+                  inputRef={inputRef}
                 />
                 <SearchResultsPredictive.Products
                   products={products}
