@@ -1,8 +1,16 @@
-# Hydrogen template: Skeleton
+# Arctic Grey Technical Test
 
-Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify’s full stack web framework. This template contains a **minimal setup** of components, queries and tooling to get started with Hydrogen.
+This repository contains a technical test implementation using Shopify's Hydrogen framework. The project demonstrates headless commerce capabilities using Shopify's stack and Remix framework.
+
+## Deployment
+
+This project is configured for deployment on Netlify, leveraging Server-Side Rendering (SSR) through Netlify Edge Functions. You can deploy your own instance by clicking the button below:
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/hydrogen-template)
+
+## About the Stack
+
+Hydrogen is Shopify's stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify's full stack web framework. This template contains a **minimal setup** of components, queries and tooling to get started with Hydrogen.
 
 - [Check out Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
 - [Get familiar with Remix](https://remix.run/docs/)

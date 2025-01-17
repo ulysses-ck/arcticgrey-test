@@ -1,6 +1,7 @@
 {
   "name": "arctic-grey-test",
   "private": true,
+  "description": "Technical test for Arctic Grey using Shopify Hydrogen and Remix",
   "sideEffects": false,
   "version": "1.0.0",
   "type": "module",
