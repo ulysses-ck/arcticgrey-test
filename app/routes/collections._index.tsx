@@ -2,7 +2,7 @@ import {useLoaderData, Link} from '@remix-run/react';
 import {defer, type LoaderFunctionArgs} from '@netlify/remix-runtime';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {PaginatedResourceSection} from '~/components/paginated-resource-section';
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
