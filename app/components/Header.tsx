@@ -21,8 +21,8 @@ export function Header({
 }: HeaderProps) {
   const {shop, menu} = header;
   return (
-    <header className="header justify-between fixed top-0 left-0 right-0 text-black">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+    <header className="header justify-between fixed top-5 left-10 right-10 text-black bg-white rounded-lg">
+      <NavLink className="uppercase" prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
       <HeaderMenu
