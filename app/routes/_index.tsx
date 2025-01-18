@@ -8,6 +8,7 @@ import type {
 } from 'storefrontapi.generated';
 import {Hero} from '~/components/hero';
 import {InfiniteMarquee} from '~/components/infinite-marquee';
+import { Reviews } from '~/components/reviews';
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -62,6 +63,7 @@ export default function Homepage() {
     <div className="home">
       <Hero />
       <InfiniteMarquee />
+      <Reviews />
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
