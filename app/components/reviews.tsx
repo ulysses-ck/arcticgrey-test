@@ -37,28 +37,36 @@ export function Reviews() {
 function MapBrands() {
     const brands = [
         {
-            name: "Herb",
-            image: <ImageBrand image={herb} width={40} />,
+            name: "Rolling Stone",
+            image: <ImageBrand image={rollingStone} width={90} />,
         },
         {
             name: "Men Journal",
             image: <ImageBrand image={menJournal} width={52} />,
         },
         {
-            name: "Rolling Stone",
-            image: <ImageBrand image={rollingStone} width={90} />,
+            name: "LA Weekly",
+            image: <div className="svg-container"><SvgBrandLaweekly /></div>,
+        },
+        {
+            name: "Herb",
+            image: <ImageBrand image={herb} width={40} />,
+        },
+        {
+            name: "NYT",
+            image: <div className="svg-container"><SvgBrandNyt /></div>,
         },
         {
             name: "BBC",
             image: <div className="svg-container"><SvgBrandBbc /></div>,
         },
         {
-            name: "LA Weekly",
-            image: <div className="svg-container"><SvgBrandLaweekly /></div>,
+            name: "Rolling Stone 1",
+            image: <ImageBrand image={rollingStone} width={90} />,
         },
         {
-            name: "NYT",
-            image: <div className="svg-container"><SvgBrandNyt /></div>,
+            name: "Men Journal 1",
+            image: <ImageBrand image={menJournal} width={52} />,
         },
     ];
     return brands.map((brand) => (
@@ -71,7 +79,7 @@ function MapBrands() {
 
 function WrapperBrand({ children }: { children: React.ReactNode }) {
     return (
-        <div className="bg-red-200 rounded-lg flex items-center justify-center w-32 h-10">
+        <div className="bg-white rounded-lg flex items-center justify-center w-32 h-10">
             {children}
         </div>
     );
