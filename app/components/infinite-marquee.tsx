@@ -19,7 +19,7 @@ function Words() {
         if (index === initialWords.length - 1) {
             return (
                 <>
-                    <span className="uppercase text-sm font-bold" key={index}>{word}</span>
+                    <SpanWord word={word} index={index} ariaHidden={index >= words.length} />
                     <SvgStar key={index + 1} />
                 </>
             )
@@ -27,8 +27,12 @@ function Words() {
             return (
                 <>
                     <SvgStar key={index + 1} />
-                    <span className="uppercase text-sm font-bold" key={index}>{word}</span>
+                    <SpanWord word={word} index={index} ariaHidden={index >= words.length} />
                 </>)
         }
     })
+}
+
+function SpanWord({ word, index, ariaHidden }: { word: string, index: number, ariaHidden: boolean }) {
+    return <span aria-hidden={ariaHidden} className="uppercase text-sm font-bold" key={index}>{word}</span>
 }
