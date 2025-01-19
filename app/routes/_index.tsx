@@ -9,6 +9,7 @@ import type {
 import {Hero} from '~/components/hero';
 import {InfiniteMarquee} from '~/components/infinite-marquee';
 import { Reviews } from '~/components/reviews';
+import { Goals } from '~/components/goals';
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -64,8 +65,7 @@ export default function Homepage() {
       <Hero />
       <InfiniteMarquee />
       <Reviews />
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <Goals />
     </div>
   );
 }
