@@ -13,7 +13,7 @@ import { SvgStarFive } from "./svg-star-five";
 
 export function Reviews() {
     return (
-        <div className="bg-gray-200 px-10 py-6 flex justify-between items-center">
+        <div className="bg-gray-200 px-10 py-6 flex justify-between items-center mb-20">
             <div className="flex flex-col gap-3">
                 <span className="text-sm font-bold border border-black text-gray-800 w-fit h-fit p-3 rounded-lg">
                     #1 Doctor Recommended
