@@ -30,8 +30,8 @@ function GoalCard({ goal }: { goal: { title: string; description: string, imageS
 
 function GoalCardImage({ imageSrc }: { imageSrc: string }) {
     return (
-        <div className="flex items-start">
-            <img src={imageSrc} alt="Goal" />
+        <div className="flex items-start w-72 h-96">
+            <img src={imageSrc} alt="Goal" className="w-full h-full object-cover" />
         </div>
     );
 }
@@ -41,7 +41,7 @@ function MapGoals() {
         {
             title: "Sleep",
             description: "Optimize your sleep patterns",
-            imageSrc: "https://cdn.shopify.com/s/files/1/0590/5793/0327/files/997c2aa242084a92c3cfd8674927555e.jpg?v=1737246823"
+            imageSrc: "https://cdn.shopify.com/s/files/1/0590/5793/0327/files/997c2aa242084a92c3cfd8674927555e.jpg?v=1737250432"
         },
         {
             title: "Cognitive Function",
