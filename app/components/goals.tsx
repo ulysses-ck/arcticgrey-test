@@ -2,10 +2,10 @@ import { SvgArrowCircle } from "./svg-arrow-circle";
 
 export function Goals() {
     return (
-        <div className="flex flex-col">
-            <h2>COMFORTABLY UNCOMFORTABLE</h2>
-            <h1>Start with your goals</h1>
-            <p>We cannot become what we want to be by remaining what we are.</p>
+        <div className="flex flex-col items-center px-10">
+            <h2 className="text-black text-base">COMFORTABLY UNCOMFORTABLE</h2>
+            <h1 className="text-gray-800 text-4xl font-bold">Start with your goals</h1>
+            <p className="text-gray-800/70 pb-10">We cannot become what we want to be by remaining what we are.</p>
             <div className="flex gap-5">
                 <MapGoals />
             </div>
