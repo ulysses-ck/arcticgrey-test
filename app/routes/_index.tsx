@@ -11,6 +11,8 @@ import {InfiniteMarquee} from '~/components/infinite-marquee';
 import { Reviews } from '~/components/reviews';
 import { Goals } from '~/components/goals';
 import { Supplements } from '~/components/supplements';
+import { CleanSupplements } from '~/components/clean-supplements';
+
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -68,6 +70,7 @@ export default function Homepage() {
       <Reviews />
       <Goals />
       <Supplements collection={data.featuredCollection} />
+      <CleanSupplements />
     </div>
   );
 }
