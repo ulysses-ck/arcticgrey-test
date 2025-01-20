@@ -15,7 +15,7 @@ export function Goals() {
 
 function GoalCard({ goal }: { goal: { title: string; description: string, imageSrc: string } }) {
     return (
-        <div className="flex flex-col w-72 gap-6">
+        <div className="flex flex-col w-72 gap-6 pb-16">
             <GoalCardImage imageSrc={goal.imageSrc} />
             <div className="flex items-start w-full">
                 <div className="flex flex-col gap-2 w-full">
