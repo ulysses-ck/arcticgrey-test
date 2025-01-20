@@ -67,6 +67,6 @@ function MapGoals() {
         },
     ]
     return goals.map((goal) => (
-        <GoalCard goal={goal} />
+        <GoalCard key={goal.title} goal={goal} />
     ));
 }

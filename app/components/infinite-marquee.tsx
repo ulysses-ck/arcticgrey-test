@@ -1,3 +1,4 @@
+import { Fragment } from "react/jsx-runtime";
 import { SvgStar } from "./svg-star";
 
 export function InfiniteMarquee() {
@@ -18,17 +19,18 @@ function Words() {
     return initialWords.map((word, index) => {
         if (index === initialWords.length - 1) {
             return (
-                <>
+                <Fragment key={index}>
                     <SpanWord word={word} index={index} ariaHidden={index >= words.length} />
                     <SvgStar key={index + 1} />
-                </>
+                </Fragment>
             )
         } else {
             return (
-                <>
+                <Fragment key={index}>
                     <SvgStar key={index + 1} />
                     <SpanWord word={word} index={index} ariaHidden={index >= words.length} />
-                </>)
+                </Fragment>
+            )
         }
     })
 }
