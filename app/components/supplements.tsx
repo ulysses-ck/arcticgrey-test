@@ -68,9 +68,9 @@ function BuyFormHover({ product }: { product: FeaturedCollectionFragment['produc
                         <div className="rounded-full w-4 h-4 border border-gray-800 flex relative">
                             <div className="opacity-0 rounded-full w-2 h-2 bg-gray-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
                         </div>
-                        <div className="flex flex-col justify-center items-start gap-1">
-                            <p className="text-xs">One Time Purchase</p>
-                            <p className="text-xs font-medium">${product.priceRange.minVariantPrice.amount}</p>
+                        <div className="flex flex-col justify-center items-start gap-1 w-full">
+                            <p className="text-xs w-full">One Time Purchase</p>
+                            <p className="text-xs font-medium w-full">${product.priceRange.minVariantPrice.amount}</p>
                         </div>
                     </label>
                     <input type="radio" name={product.id} id={`${product.id}-ss`} className="hidden peer/ss input-radio" />
@@ -78,9 +78,9 @@ function BuyFormHover({ product }: { product: FeaturedCollectionFragment['produc
                         <div className="rounded-full w-4 h-4 border border-gray-800 flex relative">
                             <div className="opacity-0 rounded-full w-2 h-2 bg-gray-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
                         </div>
-                        <div className="flex flex-col justify-center items-start gap-1">
-                            <p className="text-xs">Suscribe & Save</p>
-                            <p className="text-xs font-medium">$39.99 <span className="text-orange-800">Save 10%</span></p>
+                        <div className="flex flex-col justify-center items-start gap-1 w-full">
+                            <p className="text-xs w-full">Suscribe & Save</p>
+                            <p className="text-xs font-medium w-full">$39.99 <span className="text-orange-800">Save 10%</span></p>
                         </div>
                     </label>
                 </div>
