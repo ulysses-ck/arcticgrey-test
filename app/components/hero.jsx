@@ -7,7 +7,7 @@ export function Hero () {
 
             <div className="absolute bottom-12 left-10 p-10 flex flex-col gap-4">
                 <h1 className="text-white text-5xl font-bold">Great things never come from comfort zones</h1>
-                <Link to="/collections/all" className="text-black bg-white px-4 py-2 rounded-lg w-fit">Shop Now</Link>
+                <Link to="/collections/all" className="bg-white px-10 font-bold text-gray-800 py-2 rounded-lg w-fit">Shop Now</Link>
             </div>
         </div>
     )
