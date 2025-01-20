@@ -60,33 +60,33 @@ function ProductCard({ product }: { product: FeaturedCollectionFragment['product
 
 function BuyFormHover({ product }: { product: FeaturedCollectionFragment['products']['nodes'][number] }) {
     return (
-        <div className="absolute bottom-0 left-0 w-full px-5 py-[18px] bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-2">
+        <div className="absolute bottom-0 left-0 w-full px-5 py-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-2">
             <form className="flex flex-col gap-2">
                 <div className="flex gap-2">
                     <input type="radio" name={product.id} id={`${product.id}-otp`} className="hidden peer/otp input-radio" />
-                    <label htmlFor={`${product.id}-otp`} className="text-base bg-gray-200 text-black px-4 py-2 rounded-sm peer-checked/otp:border-black border border-[#EEEEEE]">
+                    <label htmlFor={`${product.id}-otp`} className="text-base bg-gray-200 text-black px-4 py-2 rounded-sm peer-checked/otp:border-black border border-[#EEEEEE] flex items-start gap-2 cursor-pointer">
                         <div className="rounded-full w-4 h-4 border border-gray-800 flex relative">
                             <div className="opacity-0 rounded-full w-2 h-2 bg-gray-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <p>One Time Purchase</p>
-                            <p>${product.priceRange.minVariantPrice.amount}</p>
+                        <div className="flex flex-col justify-center items-start gap-1">
+                            <p className="text-xs">One Time Purchase</p>
+                            <p className="text-xs font-medium">${product.priceRange.minVariantPrice.amount}</p>
                         </div>
                     </label>
                     <input type="radio" name={product.id} id={`${product.id}-ss`} className="hidden peer/ss input-radio" />
-                    <label htmlFor={`${product.id}-ss`} className="text-base bg-gray-200 text-black px-4 py-2 rounded-sm peer-checked/ss:border-black border border-[#EEEEEE]">
+                    <label htmlFor={`${product.id}-ss`} className="text-base bg-gray-200 text-black px-4 py-2 rounded-sm peer-checked/ss:border-black border border-[#EEEEEE] flex items-start gap-2 cursor-pointer">
                         <div className="rounded-full w-4 h-4 border border-gray-800 flex relative">
                             <div className="opacity-0 rounded-full w-2 h-2 bg-gray-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <p>Suscribe & Save</p>
-                            <p>$39.99 Save 10%</p>
+                        <div className="flex flex-col justify-center items-start gap-1">
+                            <p className="text-xs">Suscribe & Save</p>
+                            <p className="text-xs font-medium">$39.99 <span className="text-orange-800">Save 10%</span></p>
                         </div>
                     </label>
                 </div>
-                <button type="submit" className="text-white text-base bg-gray-800 rounded-sm w-full text-center">Add to Cart - ${product.priceRange.minVariantPrice.amount}</button>
+                <button type="submit" className="text-white text-base bg-gray-800 rounded-sm w-full text-center py-3.5 cursor-pointer">Add to Cart - ${product.priceRange.minVariantPrice.amount}</button>
             </form>
-            <Link to={`/products/${product.handle}`} className="text-white text-base text-center w-full block">View Full Details</Link>
+            <Link to={`/products/${product.handle}`} className="text-black text-xs underline text-center w-full block">View Full Details</Link>
         </div>
     );
 }
