@@ -1,0 +1,3 @@
+.input-radio:checked + label > div > div {
+    opacity: 1;
+}
