@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import { SvgArrow } from "./svg-arrow";
 import { SvgSmallStar } from "./svg-small-star";
 import { FeaturedCollectionFragment } from "storefrontapi.generated";
+import "./supplements.css";
 
 export function Supplements({ collection }: { collection: FeaturedCollectionFragment }) {
     return (
@@ -33,9 +34,9 @@ export function Supplements({ collection }: { collection: FeaturedCollectionFrag
 
 function ProductCard({ product }: { product: FeaturedCollectionFragment['products']['nodes'][number] }) {
     return (
-        <div className="w-[365px] h-[505px] rounded-lg bg-white relative">
+        <div className="w-[365px] h-[505px] rounded-lg bg-white relative group">
             <img className="absolute top-[33px] left-[33px] w-[300px] h-[300px] object-cover" src={product.images.nodes[0].url ?? ''} alt={product.images.nodes[0].altText ?? ''} />
-            <div className="flex flex-col gap-2 p-5 absolute bottom-0 left-0 w-full">
+            <div className="flex flex-col gap-2 p-5 absolute bottom-0 left-0 w-full group-hover:opacity-0 transition-opacity duration-300">
                 <div className="flex gap-2">
                     <MapTags tags={product.tags} />
                 </div>
@@ -52,9 +53,44 @@ function ProductCard({ product }: { product: FeaturedCollectionFragment['product
                     <button type="button" className="text-base bg-gray-800 text-white px-4 py-2 rounded-sm">Add • ${product.priceRange.minVariantPrice.amount}</button>
                 </div>
             </div>
+            <BuyFormHover product={product} />
         </div>
     );
 }
+
+function BuyFormHover({ product }: { product: FeaturedCollectionFragment['products']['nodes'][number] }) {
+    return (
+        <div className="absolute bottom-0 left-0 w-full px-5 py-[18px] bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-2">
+            <form className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                    <input type="radio" name={product.id} id={`${product.id}-otp`} className="hidden peer/otp input-radio" />
+                    <label htmlFor={`${product.id}-otp`} className="text-base bg-gray-200 text-black px-4 py-2 rounded-sm peer-checked/otp:border-black border border-[#EEEEEE]">
+                        <div className="rounded-full w-4 h-4 border border-gray-800 flex relative">
+                            <div className="opacity-0 rounded-full w-2 h-2 bg-gray-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p>One Time Purchase</p>
+                            <p>${product.priceRange.minVariantPrice.amount}</p>
+                        </div>
+                    </label>
+                    <input type="radio" name={product.id} id={`${product.id}-ss`} className="hidden peer/ss input-radio" />
+                    <label htmlFor={`${product.id}-ss`} className="text-base bg-gray-200 text-black px-4 py-2 rounded-sm peer-checked/ss:border-black border border-[#EEEEEE]">
+                        <div className="rounded-full w-4 h-4 border border-gray-800 flex relative">
+                            <div className="opacity-0 rounded-full w-2 h-2 bg-gray-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p>Suscribe & Save</p>
+                            <p>$39.99 Save 10%</p>
+                        </div>
+                    </label>
+                </div>
+                <button type="submit" className="text-white text-base bg-gray-800 rounded-sm w-full text-center">Add to Cart - ${product.priceRange.minVariantPrice.amount}</button>
+            </form>
+            <Link to={`/products/${product.handle}`} className="text-white text-base text-center w-full block">View Full Details</Link>
+        </div>
+    );
+}
+
 function MapProducts({ products }: { products: FeaturedCollectionFragment['products']['nodes'] }) {
     return products.map((product) => <ProductCard key={product.id} product={product} />)
 }
