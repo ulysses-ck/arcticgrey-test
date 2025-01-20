@@ -1,30 +1,13 @@
 import { Link } from "@remix-run/react";
-import { SvgArrow } from "./svg-arrow";
 import { SvgSmallStar } from "./svg-small-star";
 import { FeaturedCollectionFragment } from "storefrontapi.generated";
 import "./supplements.css";
+import { TitlePagination } from "./title-pagination";
 
 export function Supplements({ collection }: { collection: FeaturedCollectionFragment }) {
     return (
         <div className="flex flex-col gap-12 py-20 px-10 w-full justify-center items-center bg-gray-200">
-            <div className="flex flex-col gap-6 justify-center items-center">
-                <div className="flex gap-4">
-                    <button type="button" className="flex gap-2 items-center w-10 h-10 justify-center border rounded-sm border-gray-800/10 rotate-180">
-                        <SvgArrow />
-                    </button>
-                    <div className="flex flex-col gap-2 justify-center items-center">
-                        <h2 className="text-base">🌟 Trending</h2>
-                        <h1 className="text-4xl font-bold w-full text-gray-800">Supplements</h1>
-                    </div>
-
-                    <button type="button" className="flex gap-2 items-center w-10 h-10 justify-center border rounded-sm border-gray-800/10">
-                        <SvgArrow />
-                    </button>
-                </div>
-                <Link to="/collections/all" className="text-base underline">
-                    View All
-                </Link>
-            </div>
+            <TitlePagination title="Supplements" subtitle="🌟 Trending" link="/collections/all" />
             <div className="flex gap-5 w-full flex-wrap">
                 <MapProducts products={collection.products.nodes} />
             </div>
