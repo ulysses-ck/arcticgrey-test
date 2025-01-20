@@ -15,14 +15,16 @@ export function Goals() {
 
 function GoalCard({ goal }: { goal: { title: string; description: string, imageSrc: string } }) {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col w-72 gap-6">
             <GoalCardImage imageSrc={goal.imageSrc} />
-            <div className="flex items-start">
-                <div>
-                    <h3>{goal.title}</h3>
+            <div className="flex items-start w-full">
+                <div className="flex flex-col gap-2 w-full">
+                    <h3 className="font-bold text-[18px]">{goal.title}</h3>
                     <p>{goal.description}</p>
                 </div>
-                <SvgArrowCircle />
+                <div className="w-fit h-fit rotate-45 hover:rotate-0 transition-all duration-300">
+                    <SvgArrowCircle />
+                </div>
             </div>
         </div>
     );
