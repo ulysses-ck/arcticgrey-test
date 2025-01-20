@@ -15,37 +15,6 @@ body {
   padding: 0;
 }
 
-h1,
-h2,
-p {
-  margin: 0;
-  padding: 0;
-}
-
-p {
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-hr {
-  border-bottom: none;
-  border-top: 1px solid #000;
-  margin: 0;
-}
-
-pre {
-  white-space: pre-wrap;
-}
-
 body {
   display: flex;
   flex-direction: column;
