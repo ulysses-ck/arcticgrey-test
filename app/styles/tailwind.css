@@ -8,6 +8,7 @@
 @theme {
   --animate-marquee: marquee 8s linear infinite;
   --color-gray-200: #F6F6F5;
+  --color-gray-400: #E4E4E4;
   --color-gray-800: #1B1F23;
   --h-96: 392px;
 

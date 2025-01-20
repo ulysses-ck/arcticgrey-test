@@ -1,8 +1,12 @@
-import {Suspense} from 'react';
-import {Await, NavLink} from '@remix-run/react';
-import {type CartViewPayload, useAnalytics} from '@shopify/hydrogen';
-import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
-import {useAside} from '~/components/aside';
+import { Suspense } from 'react';
+import { Await, NavLink } from '@remix-run/react';
+import { type CartViewPayload, useAnalytics } from '@shopify/hydrogen';
+import type { HeaderQuery, CartApiQueryFragment } from 'storefrontapi.generated';
+import { useAside } from '~/components/aside';
+import SvgSearchGlass from './svg-search-glass';
+import { SvgCart } from './svg-cart';
+import SvgUserSuit from './svg-user-suit';
+import { SvgUser } from './svg-user';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -19,7 +23,7 @@ export function Header({
   cart,
   publicStoreDomain,
 }: HeaderProps) {
-  const {shop, menu} = header;
+  const { shop, menu } = header;
   return (
     <header className="header justify-between fixed top-5 left-10 right-10 text-black bg-white rounded-lg">
       <NavLink className="uppercase" prefetch="intent" to="/" style={activeLinkStyle} end>
@@ -31,7 +35,18 @@ export function Header({
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
       />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <div className="flex items-center gap-4">
+        <div className='flex items-center gap-2'>
+          <button className='flex items-center justify-between bg-gray-400 px-2 py-1 rounded-lg'>
+            Men 
+            <div className="bg-white p-2 rounded-full"><SvgUserSuit /></div>
+          </button>
+          <button className='flex items-center justify-center bg-gray-800 text-white p-2 rounded-lg'>
+            Take The Quiz
+          </button>
+        </div>
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </header>
   );
 }
@@ -48,10 +63,11 @@ export function HeaderMenu({
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
   const className = `header-menu-${viewport}`;
-  const {close} = useAside();
+  const { close } = useAside();
 
   return (
     <nav className={className} role="navigation">
+      <SearchToggle />
       {viewport === 'mobile' && (
         <NavLink
           end
@@ -69,8 +85,8 @@ export function HeaderMenu({
         // if the url is internal, we strip the domain
         const url =
           item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
+            item.url.includes(publicStoreDomain) ||
+            item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
         return (
@@ -99,20 +115,33 @@ function HeaderCtas({
     <nav className="header-ctas" role="navigation">
       <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
+        <Suspense fallback={
+          <>
+            <span aria-hidden="true" className='hidden'>Sign in</span>
+            <SvgUser />
+          </>
+        }>
           <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+            {(isLoggedIn) => (
+              <>
+                <span aria-hidden="true" className='hidden'>
+                  {
+                    isLoggedIn ? 'Account' : 'Sign in'
+                  }
+                </span>
+                <SvgUser />
+              </>
+            )}
           </Await>
         </Suspense>
       </NavLink>
-      <SearchToggle />
       <CartToggle cart={cart} />
     </nav>
   );
 }
 
 function HeaderMenuMobileToggle() {
-  const {open} = useAside();
+  const { open } = useAside();
   return (
     <button
       className="header-menu-mobile-toggle reset"
@@ -124,21 +153,23 @@ function HeaderMenuMobileToggle() {
 }
 
 function SearchToggle() {
-  const {open} = useAside();
+  const { open } = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button className="reset cursor-pointer" onClick={() => open('search')}>
+      <span aria-hidden="true" className='hidden'>Search</span>
+      <SvgSearchGlass />
     </button>
   );
 }
 
-function CartBadge({count}: {count: number | null}) {
-  const {open} = useAside();
-  const {publish, shop, cart, prevCart} = useAnalytics();
+function CartBadge({ count }: { count: number | null }) {
+  const { open } = useAside();
+  const { publish, shop, cart, prevCart } = useAnalytics();
 
   return (
     <a
       href="/cart"
+      className='relative'
       onClick={(e) => {
         e.preventDefault();
         open('cart');
@@ -150,12 +181,13 @@ function CartBadge({count}: {count: number | null}) {
         } as CartViewPayload);
       }}
     >
-      Cart {count === null ? <span>&nbsp;</span> : count}
+      <SvgCart />
+      <span className='absolute bottom-2 left-2 bg-black text-white rounded-full text-sm px-1'>{count === null ? 0 : count}</span>
     </a>
   );
 }
 
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
+function CartToggle({ cart }: Pick<HeaderProps, 'cart'>) {
   return (
     <Suspense fallback={<CartBadge count={null} />}>
       <Await resolve={cart}>
