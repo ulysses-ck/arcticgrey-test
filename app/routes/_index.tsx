@@ -12,7 +12,7 @@ import { Reviews } from '~/components/reviews';
 import { Goals } from '~/components/goals';
 import { Supplements } from '~/components/supplements';
 import { CleanSupplements } from '~/components/clean-supplements';
-
+import { Testimonials } from '~/components/testimonials';
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -71,6 +71,7 @@ export default function Homepage() {
       <Goals />
       <Supplements collection={data.featuredCollection} />
       <CleanSupplements />
+      <Testimonials products={data.recommendedProducts} />
     </div>
   );
 }
