@@ -10,6 +10,7 @@ import {Hero} from '~/components/hero';
 import {InfiniteMarquee} from '~/components/infinite-marquee';
 import { Reviews } from '~/components/reviews';
 import { Goals } from '~/components/goals';
+import { Supplements } from '~/components/supplements';
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -66,6 +67,7 @@ export default function Homepage() {
       <InfiniteMarquee />
       <Reviews />
       <Goals />
+      <Supplements collection={data.featuredCollection} />
     </div>
   );
 }
@@ -144,6 +146,30 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       height
     }
     handle
+    products(first: 8) {
+      nodes {
+        id
+        title
+        description
+        handle
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        images(first: 1) {
+          nodes {
+            id
+            url
+            altText
+            width
+            height
+          }
+        }
+        tags
+      }
+    }
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {

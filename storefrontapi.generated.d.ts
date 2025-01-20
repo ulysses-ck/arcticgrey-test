@@ -329,7 +329,10 @@ export type FeaturedCollectionFragment = Pick<
   >;
   products: {
     nodes: Array<
-      Pick<StorefrontAPI.Product, 'id' | 'title' | 'handle'> & {
+      Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'description' | 'handle' | 'tags'
+      > & {
         priceRange: {
           minVariantPrice: Pick<
             StorefrontAPI.MoneyV2,
@@ -366,7 +369,10 @@ export type FeaturedCollectionQuery = {
         >;
         products: {
           nodes: Array<
-            Pick<StorefrontAPI.Product, 'id' | 'title' | 'handle'> & {
+            Pick<
+              StorefrontAPI.Product,
+              'id' | 'title' | 'description' | 'handle' | 'tags'
+            > & {
               priceRange: {
                 minVariantPrice: Pick<
                   StorefrontAPI.MoneyV2,
@@ -1251,7 +1257,7 @@ interface GeneratedQueryTypes {
     return: SitemapQuery;
     variables: SitemapQueryVariables;
   };
-  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first: 8) {\n      nodes {\n        id\n        title\n        handle\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        images(first: 1) {\n          nodes {\n            id\n            url\n            altText\n            width\n            height\n          }\n        }\n      }\n    }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
+  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first: 8) {\n      nodes {\n        id\n        title\n        description\n        handle\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        images(first: 1) {\n          nodes {\n            id\n            url\n            altText\n            width\n            height\n          }\n        }\n        tags\n      }\n    }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
     return: FeaturedCollectionQuery;
     variables: FeaturedCollectionQueryVariables;
   };
